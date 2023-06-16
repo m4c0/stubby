@@ -1,8 +1,4 @@
-#include "../ecow/ecow.hpp"
-#include "../hai/build.hpp"
-#include "../missingno/build.hpp"
-#include "../silog/build.hpp"
-#include "../sires/build.hpp"
+#include "build.hpp"
 
 int main(int argc, char **argv) {
   using namespace ecow;
@@ -12,6 +8,7 @@ int main(int argc, char **argv) {
   poc->add_wsdep("missingno", missingno());
   poc->add_wsdep("silog", silog());
   poc->add_wsdep("sires", sires());
+  poc->add_ref(stubby());
   poc->add_unit<>("poc");
   return run_main(poc, argc, argv);
 }
