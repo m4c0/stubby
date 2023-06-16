@@ -25,9 +25,32 @@ struct image {
 };
 
 stbi_io_callbacks yoyo_callbacks{
-    .read = [](void *user, char *data, int size) -> int { return 0; },
-    .skip = [](void *user, int n) -> void {},
-    .eof = [](void *user) -> int { return 0; },
+    .read = [](void *user, char *data, int size) -> int {
+      return static_cast<yoyo::reader *>(user)
+          ->read(data, size)
+          .map([size] { return size; })
+          .take([size](auto msg) {
+            silog::log(silog::error, "Failed to read %d bytes of image: %s",
+                       size, msg);
+            return 0;
+          });
+    },
+    .skip = [](void *user, int n) -> void {
+      static_cast<yoyo::reader *>(user)
+          ->seekg(n, yoyo::seek_mode::current)
+          .take([](auto msg) {
+            silog::log(silog::error, "Failed to seek image: %s", msg);
+          });
+    },
+    .eof = [](void *user) -> int {
+      return static_cast<yoyo::reader *>(user)
+          ->eof()
+          .map([](auto) { return 1; })
+          .take([](auto msg) {
+            silog::log(silog::error, "Failed to check EOF of image: %s", msg);
+            return 0;
+          });
+    },
 };
 
 inline mno::req<image> load_from(auto fn, auto... args) {
@@ -42,7 +65,7 @@ export mno::req<image> load(const char *fname) {
 }
 export mno::req<image> load_from_resource(jute::view fname) {
   return sires::open(fname).fmap([](auto &rdr) {
-    return load_from(stbi_load_from_callbacks, &yoyo_callbacks, &rdr);
+    return load_from(stbi_load_from_callbacks, &yoyo_callbacks, &*rdr);
   });
 }
 } // namespace stbi
