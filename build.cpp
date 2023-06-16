@@ -3,7 +3,7 @@
 int main(int argc, char **argv) {
   using namespace ecow;
 
-  auto all = unit::create<seq>("all");
-  all->add_unit<>("poc");
-  return run_main(all, argc, argv);
+  auto poc = unit::create<tool>("poc");
+  poc->add_unit<>("poc");
+  return run_main(poc, argc, argv);
 }
