@@ -27,8 +27,7 @@ struct image {
 stbi_io_callbacks yoyo_callbacks{
     .read = [](void *user, char *data, int size) -> int {
       return static_cast<yoyo::reader *>(user)
-          ->read(data, size)
-          .map([size] { return size; })
+          ->read_up_to(data, size)
           .take([size](auto msg) {
             silog::log(silog::error, "Failed to read %d bytes of image: %s",
                        size, msg);
