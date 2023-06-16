@@ -3,6 +3,7 @@
 #include "../missingno/build.hpp"
 #include "../silog/build.hpp"
 #include "../sires/build.hpp"
+#include "../traits/build.hpp"
 
 auto stubby() {
   using namespace ecow;
@@ -12,5 +13,6 @@ auto stubby() {
   m->add_wsdep("missingno", missingno());
   m->add_wsdep("silog", silog());
   m->add_wsdep("sires", sires());
+  m->add_wsdep("traits", traits());
   return m;
 }

@@ -4,6 +4,9 @@ module;
 
 export module stubby;
 import hai;
+import missingno;
+import sires;
+import traits;
 
 namespace stbi {
 static constexpr const auto num_channels = 4;
@@ -20,10 +23,11 @@ struct image {
   uc_ptr data;
 };
 
-export image load(const char *fname) {
+export mno::req<image> load(const char *fname) {
   image res{};
   res.data = uc_ptr{stbi_load(fname, &res.width, &res.height, &res.num_channels,
                               num_channels)};
-  return res;
+  return (*res.data == nullptr) ? mno::req<image>::failed(stbi_failure_reason())
+                                : mno::req<image>{traits::move(res)};
 }
 } // namespace stbi
