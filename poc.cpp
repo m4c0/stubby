@@ -1,5 +1,23 @@
+import hai;
 import silog;
 import stubby;
+
+void test_write() {
+  constexpr const auto w = 64;
+  constexpr const auto h = 32;
+  hai::array<stbi::pixel> data{w * h};
+  for (auto y = 0U; y < h; y++) {
+    for (auto x = 0U; x < w; x++) {
+      data[y * w + x] = {
+          .r = static_cast<unsigned char>(x * 4),
+          .g = static_cast<unsigned char>(y * 8),
+          .b = 255,
+          .a = 255,
+      };
+    }
+  }
+  stbi::write_rgba("out/test.png", w, h, data);
+}
 
 int main(int argc, char **argv) {
   stbi::load_from_resource("test.png")
@@ -9,6 +27,8 @@ int main(int argc, char **argv) {
       .take([](auto msg) {
         silog::log(silog::error, "Failed loading resource image: %s", msg);
       });
+
+  test_write();
 
   if (argc < 2) {
     silog::log(silog::warning, "Pass an extra arg to test with a file in-disk");
