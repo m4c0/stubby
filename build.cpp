@@ -1,3 +1,4 @@
+#include "../silog/build.hpp"
 #include "build.hpp"
 
 int main(int argc, char **argv) {
