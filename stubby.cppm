@@ -2,6 +2,7 @@ export module stubby;
 import hai;
 import jute;
 import missingno;
+import silog;
 import sires;
 
 namespace stbi {
