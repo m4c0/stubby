@@ -1,3 +1,5 @@
+export module poc;
+
 import hai;
 import silog;
 import stubby;
@@ -19,7 +21,7 @@ void test_write() {
   stbi::write_rgba("out/test.png", w, h, data);
 }
 
-int main(int argc, char **argv) {
+extern "C" int main(int argc, char **argv) {
   stbi::load_from_resource("test.png")
       .map([](auto &&img) {
         silog::log(silog::info, "Resource image: %dx%d", img.width, img.height);
