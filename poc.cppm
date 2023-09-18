@@ -1,3 +1,5 @@
+#pragma leco app
+#pragma leco add_resource "test.png"
 export module poc;
 
 import hai;

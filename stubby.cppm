@@ -32,5 +32,5 @@ export void write_rgba(const char *fname, unsigned x, unsigned y,
                        const hai::array<pixel> &data);
 } // namespace stbi
 
-#pragma ecow add_impl load
-#pragma ecow add_impl write
+#pragma leco add_impl load
+#pragma leco add_impl write
