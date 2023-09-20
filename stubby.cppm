@@ -30,6 +30,8 @@ export struct pixel {
 static_assert(sizeof(pixel) == 4);
 export void write_rgba(const char *fname, unsigned x, unsigned y,
                        const hai::array<pixel> &data);
+export void write_rgba_unsafe(const char *fname, unsigned x, unsigned y,
+                              const pixel *data);
 } // namespace stbi
 
 #pragma leco add_impl load

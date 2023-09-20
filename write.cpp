@@ -15,14 +15,18 @@ void stbi::write_rgba(const char *fname, unsigned w, unsigned h,
   if (data.size() != w * h)
     return;
 
+  write_rgba_unsafe(fname, w, h, data.begin());
+}
+void stbi::write_rgba_unsafe(const char *fname, unsigned w, unsigned h,
+                             const pixel *data) {
   auto [stem, ext] = jute::view::unsafe(fname).rsplit('.');
   if (ext == "png") {
-    stbi_write_png(fname, w, h, 4, data.begin(), w * sizeof(pixel));
+    stbi_write_png(fname, w, h, 4, data, w * sizeof(pixel));
   } else if (ext == "bmp") {
-    stbi_write_bmp(fname, w, h, 4, data.begin());
+    stbi_write_bmp(fname, w, h, 4, data);
   } else if (ext == "tga") {
-    stbi_write_tga(fname, w, h, 4, data.begin());
+    stbi_write_tga(fname, w, h, 4, data);
   } else if (ext == "jpg") {
-    stbi_write_jpg(fname, w, h, 4, data.begin(), 75);
+    stbi_write_jpg(fname, w, h, 4, data, 75);
   }
 }
