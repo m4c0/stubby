@@ -11,7 +11,7 @@ struct deleter {
 };
 using uc_ptr = hai::value_holder<unsigned char *, deleter>;
 
-struct image {
+export struct image {
   int width;
   int height;
   int num_channels;
