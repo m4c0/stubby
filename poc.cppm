@@ -2,14 +2,13 @@
 #pragma leco add_resource "test.png"
 export module poc;
 
-import hai;
 import silog;
 import stubby;
 
 void test_write() {
   constexpr const auto w = 64;
   constexpr const auto h = 32;
-  hai::array<stbi::pixel> data{w * h};
+  stbi::pixels data{w * h};
   for (auto y = 0U; y < h; y++) {
     for (auto x = 0U; x < w; x++) {
       data[y * w + x] = {

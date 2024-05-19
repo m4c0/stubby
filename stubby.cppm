@@ -28,8 +28,9 @@ export struct pixel {
   unsigned char a;
 };
 static_assert(sizeof(pixel) == 4);
+export using pixels = hai::array<pixel>;
 export void write_rgba(const char *fname, unsigned x, unsigned y,
-                       const hai::array<pixel> &data);
+                       const pixels &data);
 export void write_rgba_unsafe(const char *fname, unsigned x, unsigned y,
                               const pixel *data);
 } // namespace stbi
