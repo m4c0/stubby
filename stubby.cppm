@@ -31,6 +31,12 @@ static_assert(sizeof(pixel) == 4);
 export using pixels = hai::array<pixel>;
 export void write_rgba(const char *fname, unsigned x, unsigned y,
                        const pixels &data);
+
+static_assert(sizeof(unsigned) == 4);
+export using pixels_u = hai::array<unsigned>;
+export void write_rgba(const char *fname, unsigned x, unsigned y,
+                       const pixels_u &data);
+
 export void write_rgba_unsafe(const char *fname, unsigned x, unsigned y,
                               const pixel *data);
 } // namespace stbi
