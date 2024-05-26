@@ -31,20 +31,15 @@ stbi_io_callbacks yoyo_callbacks{
     .skip = [](void *user, int n) -> void {
       static_cast<yoyo::reader *>(user)
           ->seekg(n, yoyo::seek_mode::current)
-          .take([](auto msg) {
-            silog::log(silog::error, "Failed to seek image: %s",
-                       msg.cstr().data());
-          });
+          .trace("seeking image")
+          .log_error();
     },
     .eof = [](void *user) -> int {
       return static_cast<yoyo::reader *>(user)
           ->eof()
           .map([](auto) { return 1; })
-          .take([](auto msg) {
-            silog::log(silog::error, "Failed to check EOF of image: %s",
-                       msg.cstr().data());
-            return 0;
-          });
+          .trace("checking EOF of image")
+          .log_error();
     },
 };
 
