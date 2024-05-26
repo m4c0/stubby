@@ -28,7 +28,8 @@ extern "C" int main(int argc, char **argv) {
         silog::log(silog::info, "Resource image: %dx%d", img.width, img.height);
       })
       .take([](auto msg) {
-        silog::log(silog::error, "Failed loading resource image: %s", msg);
+        silog::log(silog::error, "Failed loading resource image: %s",
+                   msg.cstr().data());
       });
 
   test_write();
@@ -43,6 +44,6 @@ extern "C" int main(int argc, char **argv) {
         silog::log(silog::info, "Image: %dx%d", img.width, img.height);
       })
       .take([](auto msg) {
-        silog::log(silog::error, "Failed loading image: %s", msg);
+        silog::log(silog::error, "Failed loading image: %s", msg.cstr().data());
       });
 }

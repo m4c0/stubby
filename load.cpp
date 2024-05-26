@@ -24,7 +24,7 @@ stbi_io_callbacks yoyo_callbacks{
           ->read_up_to(data, size)
           .take([size](auto msg) {
             silog::log(silog::error, "Failed to read %d bytes of image: %s",
-                       size, msg);
+                       size, msg.cstr().data());
             return 0;
           });
     },
@@ -32,7 +32,8 @@ stbi_io_callbacks yoyo_callbacks{
       static_cast<yoyo::reader *>(user)
           ->seekg(n, yoyo::seek_mode::current)
           .take([](auto msg) {
-            silog::log(silog::error, "Failed to seek image: %s", msg);
+            silog::log(silog::error, "Failed to seek image: %s",
+                       msg.cstr().data());
           });
     },
     .eof = [](void *user) -> int {
@@ -40,7 +41,8 @@ stbi_io_callbacks yoyo_callbacks{
           ->eof()
           .map([](auto) { return 1; })
           .take([](auto msg) {
-            silog::log(silog::error, "Failed to check EOF of image: %s", msg);
+            silog::log(silog::error, "Failed to check EOF of image: %s",
+                       msg.cstr().data());
             return 0;
           });
     },
@@ -50,7 +52,8 @@ inline mno::req<image> load_from(auto fn, auto... args) {
   image res{};
   res.data = uc_ptr{
       fn(args..., &res.width, &res.height, &res.num_channels, num_channels)};
-  return (*res.data == nullptr) ? mno::req<image>::failed(stbi_failure_reason())
+  return (*res.data == nullptr) ? mno::req<image>::failed(
+                                      jute::view::unsafe(stbi_failure_reason()))
                                 : mno::req<image>{traits::move(res)};
 }
 mno::req<image> load(const char *fname) { return load_from(stbi_load, fname); }
