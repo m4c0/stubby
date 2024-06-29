@@ -54,7 +54,7 @@ inline mno::req<image> load_from(auto fn, auto... args) {
 mno::req<image> load(const char *fname) { return load_from(stbi_load, fname); }
 mno::req<image> load_from_resource(jute::view fname) {
   return sires::open(fname).fmap([](auto &rdr) {
-    return load_from(stbi_load_from_callbacks, &yoyo_callbacks, &*rdr);
+    return load_from(stbi_load_from_callbacks, &yoyo_callbacks, &rdr);
   });
 }
 } // namespace stbi
