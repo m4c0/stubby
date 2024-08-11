@@ -11,6 +11,7 @@ import missingno;
 import silog;
 import sires;
 import traits;
+import yoyo;
 
 namespace stbi {
 static constexpr const auto num_channels = 4;
