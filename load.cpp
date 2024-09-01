@@ -58,4 +58,15 @@ mno::req<image> load_from_resource(jute::view fname) {
     return load_from(stbi_load_from_callbacks, &yoyo_callbacks, &rdr);
   });
 }
+void load_from_resource(jute::view fname, hai::fn<void, const image &> callback) {
+  sires::jojo(fname, nullptr, [=](void *, hai::array<char> & file) mutable {
+    auto data = reinterpret_cast<unsigned char *>(file.begin());
+
+    image res {};
+    res.data = uc_ptr {
+      stbi_load_from_memory(data, file.size(), &res.width, &res.height, &res.num_channels, 4)
+    };
+    if (*res.data != nullptr) callback(res);
+  });
+}
 } // namespace stbi

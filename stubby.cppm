@@ -20,6 +20,7 @@ export struct image {
 
 export mno::req<image> load(const char *fname);
 export mno::req<image> load_from_resource(jute::view fname);
+export void load_from_resource(jute::view fname, hai::fn<void, const image &> callback);
 
 export struct pixel {
   unsigned char r;
