@@ -1,5 +1,6 @@
 #pragma leco app
 #pragma leco add_resource "test.png"
+#pragma leco add_resource "test.ttf"
 export module poc;
 
 import silog;
@@ -19,6 +20,9 @@ void test_write() {
       };
     }
   }
+
+  auto font = stbtt::load_from_resource("test.ttf");
+
   stbi::write_rgba("out/test.png", w, h, data);
 }
 

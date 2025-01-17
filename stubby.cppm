@@ -42,6 +42,13 @@ export void write_rgba_unsafe(const char *fname, unsigned x, unsigned y,
                               const pixel *data);
 } // namespace stbi
 
+namespace stbtt {
+  export class font;
+  export struct deleter { void operator()(font *); };
+  export using font_ptr = hai::value_holder<font *, deleter>;
+  export font_ptr load_from_resource(jute::view fname);
+}
+
 #pragma leco add_impl font
 #pragma leco add_impl load
 #pragma leco add_impl write
