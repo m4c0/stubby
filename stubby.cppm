@@ -42,5 +42,6 @@ export void write_rgba_unsafe(const char *fname, unsigned x, unsigned y,
                               const pixel *data);
 } // namespace stbi
 
+#pragma leco add_impl font
 #pragma leco add_impl load
 #pragma leco add_impl write
