@@ -81,4 +81,23 @@ void load_from_resource(jute::view fname, void * ptr, hai::fn<void, void *, cons
     if (*res.data != nullptr) callback(ptr, res);
   });
 }
+
+void info(jute::view fname, void * ptr, hai::fn<void, void *, const image &> callback) {
+  jojo::read(fname, ptr, [=](void * ptr, hai::array<char> & file) mutable {
+    auto data = reinterpret_cast<unsigned char *>(file.begin());
+
+    image res {};
+    stbi_info_from_memory(data, file.size(), &res.width, &res.height, &res.num_channels);
+    callback(ptr, res);
+  });
+}
+void info_from_resource(jute::view fname, void * ptr, hai::fn<void, void *, const image &> callback) {
+  sires::jojo(fname, ptr, [=](void * ptr, hai::array<char> & file) mutable {
+    auto data = reinterpret_cast<unsigned char *>(file.begin());
+
+    image res {};
+    stbi_info_from_memory(data, file.size(), &res.width, &res.height, &res.num_channels);
+    callback(ptr, res);
+  });
+}
 } // namespace stbi

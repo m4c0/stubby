@@ -23,6 +23,9 @@ export mno::req<image> load_from_resource(jute::view fname);
 export void load(jute::view fname, void *, hai::fn<void, void *, const image &> callback);
 export void load_from_resource(jute::view fname, void *, hai::fn<void, void *, const image &> callback);
 
+export void info(jute::view fname, void *, hai::fn<void, void *, const image &> callback);
+export void info_from_resource(jute::view fname, void *, hai::fn<void, void *, const image &> callback);
+
 export struct pixel {
   unsigned char r;
   unsigned char g;
