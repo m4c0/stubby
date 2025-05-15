@@ -7,6 +7,7 @@ module;
 
 module stubby;
 import hai;
+import jojo;
 import missingno;
 import silog;
 import sires;
@@ -56,6 +57,17 @@ mno::req<image> load(const char *fname) { return load_from(stbi_load, fname); }
 mno::req<image> load_from_resource(jute::view fname) {
   return sires::open(fname).fmap([](auto &rdr) {
     return load_from(stbi_load_from_callbacks, &yoyo_callbacks, &rdr);
+  });
+}
+void load(jute::view fname, void * ptr, hai::fn<void, void *, const image &> callback) {
+  jojo::read(fname, ptr, [=](void * ptr, hai::array<char> & file) mutable {
+    auto data = reinterpret_cast<unsigned char *>(file.begin());
+
+    image res {};
+    res.data = uc_ptr {
+      stbi_load_from_memory(data, file.size(), &res.width, &res.height, &res.num_channels, 4)
+    };
+    if (*res.data != nullptr) callback(ptr, res);
   });
 }
 void load_from_resource(jute::view fname, void * ptr, hai::fn<void, void *, const image &> callback) {
