@@ -10,34 +10,32 @@ import hai;
 import jute;
 import silog;
 
-static void write(const char *fname, unsigned w, unsigned h, const void *data) {
+static int write(const char *fname, unsigned w, unsigned h, const void *data) {
   auto [stem, ext] = jute::view::unsafe(fname).rsplit('.');
   if (ext == "png") {
-    stbi_write_png(fname, w, h, 4, data, w * sizeof(stbi::pixel));
+    return stbi_write_png(fname, w, h, 4, data, w * sizeof(stbi::pixel));
   } else if (ext == "bmp") {
-    stbi_write_bmp(fname, w, h, 4, data);
+    return stbi_write_bmp(fname, w, h, 4, data);
   } else if (ext == "tga") {
-    stbi_write_tga(fname, w, h, 4, data);
+    return stbi_write_tga(fname, w, h, 4, data);
   } else if (ext == "jpg") {
-    stbi_write_jpg(fname, w, h, 4, data, 75);
+    return stbi_write_jpg(fname, w, h, 4, data, 75);
+  } else {
+    throw stbi::unsupported_file_extension {};
   }
 }
 
 void stbi::write_rgba(const char *fname, unsigned w, unsigned h,
                       const hai::array<pixel> &data) {
-  if (data.size() != w * h)
-    return;
-
-  write(fname, w, h, data.begin());
+  if (data.size() != w * h) throw invalid_image_size {};
+  if (!write(fname, w, h, data.begin())) throw error {};
 }
 void stbi::write_rgba(const char *fname, unsigned w, unsigned h,
                       const hai::array<unsigned> &data) {
-  if (data.size() != w * h)
-    return;
-
-  write(fname, w, h, data.begin());
+  if (data.size() != w * h) throw invalid_image_size {};
+  if (!write(fname, w, h, data.begin())) throw error {};
 }
 void stbi::write_rgba_unsafe(const char *fname, unsigned w, unsigned h,
                              const pixel *data) {
-  write(fname, w, h, data);
+  if (!write(fname, w, h, data)) throw error {};
 }

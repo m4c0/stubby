@@ -6,6 +6,10 @@ import silog;
 import sires;
 
 namespace stbi {
+  struct error {};
+  struct invalid_image_size {};
+  struct unsupported_file_extension {};
+
 struct deleter {
   void operator()(unsigned char *ptr) const;
 };
