@@ -2,6 +2,7 @@
 #pragma leco add_resource "test.png"
 #pragma leco add_resource "test.ttf"
 
+import jute;
 import silog;
 import sires;
 import stubby;
@@ -27,12 +28,9 @@ void test_write() {
 }
 
 int main(int argc, char **argv) {
-  stbi::load_from_resource("test.png")
-      .map([](auto &&img) {
-        silog::log(silog::info, "Resource image: %dx%d", img.width, img.height);
-      })
-      .trace("loading resource image")
-      .log_error();
+  auto bits = sires::slurp("test.png");
+  auto img = stbi::load(bits.begin(), bits.size());
+  silog::log(silog::info, "Resource image: %dx%d", img.width, img.height);
 
   test_write();
 
@@ -41,10 +39,7 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  stbi::load(argv[1])
-      .map([](auto &&img) {
-        silog::log(silog::info, "Image: %dx%d", img.width, img.height);
-      })
-      .trace("loading image")
-      .log_error();
+  bits = sires::slurp(jute::view::unsafe(argv[1]));
+  img = stbi::load(bits.begin(), bits.size());
+  silog::log(silog::info, "Image: %dx%d", img.width, img.height);
 }

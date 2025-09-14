@@ -1,8 +1,6 @@
 export module stubby;
 import hai;
 import jute;
-import missingno;
-import silog;
 
 namespace stbi {
   struct error {};
@@ -21,13 +19,8 @@ export struct image {
   uc_ptr data;
 };
 
-export mno::req<image> load(const char *fname);
-export mno::req<image> load_from_resource(jute::view fname);
-export void load(jute::view fname, void *, hai::fn<void, void *, const image &> callback);
-export void load_from_resource(jute::view fname, void *, hai::fn<void, void *, const image &> callback);
-
-export void info(jute::view fname, void *, hai::fn<void, void *, const image &> callback);
-export void info_from_resource(jute::view fname, void *, hai::fn<void, void *, const image &> callback);
+export image load(const char * data, unsigned size);
+export image info(const char * data, unsigned size);
 
 export struct pixel {
   unsigned char r;

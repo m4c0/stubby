@@ -7,97 +7,19 @@ module;
 
 module stubby;
 import hai;
-import jojo;
-import missingno;
-import silog;
-import sires;
-import traits;
-import yoyo;
 
 namespace stbi {
-static constexpr const auto num_channels = 4;
-
-void deleter::operator()(unsigned char *ptr) const { stbi_image_free(ptr); }
-using uc_ptr = hai::value_holder<unsigned char *, deleter>;
-
-stbi_io_callbacks yoyo_callbacks{
-    .read = [](void *user, char *data, int size) -> int {
-      return static_cast<yoyo::reader *>(user)
-          ->read_up_to(data, size)
-          .take([size](auto msg) {
-            silog::log(silog::error, "Failed to read %d bytes of image: %s",
-                       size, msg.cstr().data());
-            return 0;
-          });
-    },
-    .skip = [](void *user, int n) -> void {
-      static_cast<yoyo::reader *>(user)
-          ->seekg(n, yoyo::seek_mode::current)
-          .trace("seeking image")
-          .log_error();
-    },
-    .eof = [](void *user) -> int {
-      return static_cast<yoyo::reader *>(user)
-          ->eof()
-          .map([](auto) { return 1; })
-          .trace("checking EOF of image")
-          .log_error();
-    },
-};
-
-inline mno::req<image> load_from(auto fn, auto... args) {
-  image res{};
-  res.data = uc_ptr{
-      fn(args..., &res.width, &res.height, &res.num_channels, num_channels)};
-  return (*res.data == nullptr) ? mno::req<image>::failed(
-                                      jute::view::unsafe(stbi_failure_reason()))
-                                : mno::req<image>{traits::move(res)};
-}
-mno::req<image> load(const char *fname) { return load_from(stbi_load, fname); }
-mno::req<image> load_from_resource(jute::view fname) {
-  return sires::open(fname).fmap([](auto &rdr) {
-    return load_from(stbi_load_from_callbacks, &yoyo_callbacks, &rdr);
-  });
-}
-void load(jute::view fname, void * ptr, hai::fn<void, void *, const image &> callback) {
-  jojo::read(fname, ptr, [=](void * ptr, hai::array<char> & file) mutable {
-    auto data = reinterpret_cast<unsigned char *>(file.begin());
-
-    image res {};
-    res.data = uc_ptr {
-      stbi_load_from_memory(data, file.size(), &res.width, &res.height, &res.num_channels, 4)
-    };
-    if (*res.data != nullptr) callback(ptr, res);
-  });
-}
-void load_from_resource(jute::view fname, void * ptr, hai::fn<void, void *, const image &> callback) {
-  sires::jojo(fname, ptr, [=](void * ptr, hai::array<char> & file) mutable {
-    auto data = reinterpret_cast<unsigned char *>(file.begin());
-
-    image res {};
-    res.data = uc_ptr {
-      stbi_load_from_memory(data, file.size(), &res.width, &res.height, &res.num_channels, 4)
-    };
-    if (*res.data != nullptr) callback(ptr, res);
-  });
+  void deleter::operator()(unsigned char *ptr) const { stbi_image_free(ptr); }
+  using uc_ptr = hai::value_holder<unsigned char *, deleter>;
 }
 
-void info(jute::view fname, void * ptr, hai::fn<void, void *, const image &> callback) {
-  jojo::read(fname, ptr, [=](void * ptr, hai::array<char> & file) mutable {
-    auto data = reinterpret_cast<unsigned char *>(file.begin());
+stbi::image stbi::load(const char * data, unsigned sz) {
+  auto d = reinterpret_cast<const unsigned char *>(data);
 
-    image res {};
-    stbi_info_from_memory(data, file.size(), &res.width, &res.height, &res.num_channels);
-    callback(ptr, res);
-  });
+  image res {};
+  res.data = uc_ptr {
+    stbi_load_from_memory(d, sz, &res.width, &res.height, &res.num_channels, 4)
+  };
+  return res;
 }
-void info_from_resource(jute::view fname, void * ptr, hai::fn<void, void *, const image &> callback) {
-  sires::jojo(fname, ptr, [=](void * ptr, hai::array<char> & file) mutable {
-    auto data = reinterpret_cast<unsigned char *>(file.begin());
 
-    image res {};
-    stbi_info_from_memory(data, file.size(), &res.width, &res.height, &res.num_channels);
-    callback(ptr, res);
-  });
-}
-} // namespace stbi
