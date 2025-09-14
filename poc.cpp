@@ -1,7 +1,6 @@
 #pragma leco app
 #pragma leco add_resource "test.png"
 #pragma leco add_resource "test.ttf"
-export module poc;
 
 import silog;
 import stubby;
@@ -26,7 +25,7 @@ void test_write() {
   stbi::write_rgba("out/test.png", w, h, data);
 }
 
-extern "C" int main(int argc, char **argv) {
+int main(int argc, char **argv) {
   stbi::load_from_resource("test.png")
       .map([](auto &&img) {
         silog::log(silog::info, "Resource image: %dx%d", img.width, img.height);
