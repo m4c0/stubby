@@ -3,6 +3,7 @@
 #pragma leco add_resource "test.ttf"
 
 import silog;
+import sires;
 import stubby;
 
 void test_write() {
@@ -20,7 +21,7 @@ void test_write() {
     }
   }
 
-  auto font = stbtt::load_from_resource("test.ttf");
+  auto font = stbtt::load(sires::slurp("test.ttf").begin());
 
   stbi::write_rgba("out/test.png", w, h, data);
 }

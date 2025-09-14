@@ -3,7 +3,6 @@ import hai;
 import jute;
 import missingno;
 import silog;
-import sires;
 
 namespace stbi {
   struct error {};
@@ -51,10 +50,12 @@ export void write_rgba_unsafe(const char *fname, unsigned x, unsigned y,
 } // namespace stbi
 
 namespace stbtt {
+  export class error {};
   export class font;
   export struct deleter { void operator()(font *); };
   export using font_ptr = hai::value_holder<font *, deleter>;
-  export font_ptr load_from_resource(jute::view fname);
+  // Note: stbtt does not take the size of the buffer as input. That sounds unsafe.
+  export font_ptr load(const char * data);
 }
 
 #pragma leco add_impl font
