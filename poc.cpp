@@ -22,16 +22,27 @@ void test_write() {
     }
   }
 
-  auto font = stbtt::load(sires::slurp("test.ttf").begin());
-
   stbi::write_rgba("out/test.png", w, h, data);
 }
 
-int main(int argc, char **argv) {
-  auto bits = sires::slurp("test.png");
-  auto img = stbi::load(bits.begin(), bits.size());
-  silog::log(silog::info, "Resource image: %dx%d", img.width, img.height);
+void test_read() {
+  sires::read("test.ttf", nullptr, [](void * ptr, auto & data) {
+    auto font = stbtt::load(data.begin());
+  });
 
+  sires::read("test.png", nullptr, [](void * ptr, auto & bits) {
+    auto img = stbi::load(bits.begin(), bits.size());
+    silog::log(silog::info, "Resource image: %dx%d", img.width, img.height);
+  });
+}
+
+#ifdef LECO_TARGET_WASM
+int main() {
+  test_read();
+}
+#else
+int main(int argc, char **argv) {
+  test_read();
   test_write();
 
   if (argc < 2) {
@@ -39,7 +50,9 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  bits = sires::slurp(jute::view::unsafe(argv[1]));
-  img = stbi::load(bits.begin(), bits.size());
-  silog::log(silog::info, "Image: %dx%d", img.width, img.height);
+  sires::read(jute::view::unsafe(argv[1]), nullptr, [](void * ptr, auto & bits) {
+    auto img = stbi::load(bits.begin(), bits.size());
+    silog::log(silog::info, "Image: %dx%d", img.width, img.height);
+  });
 }
+#endif
