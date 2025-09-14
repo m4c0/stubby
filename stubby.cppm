@@ -20,9 +20,9 @@ export struct image {
 };
 
 export image load(const char * data, unsigned size);
-export image load(auto data) { return load(data.begin(), data.size()); }
+export image load(auto && data) { return load(data.begin(), data.size()); }
 export image info(const char * data, unsigned size);
-export image info(auto data) { return info(data.begin(), data.size()); }
+export image info(auto && data) { return info(data.begin(), data.size()); }
 
 export struct pixel {
   unsigned char r;
