@@ -1,6 +1,7 @@
 #pragma leco app
 #pragma leco add_resource "test.png"
 import jute;
+import hai;
 import silog;
 import sires;
 import stubby;
@@ -24,7 +25,7 @@ void test_write() {
 }
 
 void test_read() {
-  sires::read("test.png", nullptr, [](void * ptr, auto & bits) {
+  sires::read("test.png", nullptr, [](void * ptr, hai::array<char> & bits) {
     auto img = stbi::load(bits.begin(), bits.size());
     silog::log(silog::info, "Resource image: %dx%d", img.width, img.height);
   });
@@ -44,7 +45,7 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  sires::read(jute::view::unsafe(argv[1]), nullptr, [](void * ptr, auto & bits) {
+  sires::read(jute::view::unsafe(argv[1]), nullptr, [](void * ptr, hai::array<char> & bits) {
     auto img = stbi::load(bits.begin(), bits.size());
     silog::log(silog::info, "Image: %dx%d", img.width, img.height);
   });
