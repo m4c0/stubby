@@ -1,7 +1,5 @@
 #pragma leco app
 #pragma leco add_resource "test.png"
-#pragma leco add_resource "test.ttf"
-
 import jute;
 import silog;
 import sires;
@@ -26,10 +24,6 @@ void test_write() {
 }
 
 void test_read() {
-  sires::read("test.ttf", nullptr, [](void * ptr, auto & data) {
-    auto font = stbtt::load(data.begin());
-  });
-
   sires::read("test.png", nullptr, [](void * ptr, auto & bits) {
     auto img = stbi::load(bits.begin(), bits.size());
     silog::log(silog::info, "Resource image: %dx%d", img.width, img.height);

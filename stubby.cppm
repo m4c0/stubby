@@ -42,15 +42,5 @@ export void write_rgba_unsafe(const char *fname, unsigned x, unsigned y,
                               const pixel *data);
 } // namespace stbi
 
-namespace stbtt {
-  export class error {};
-  export class font;
-  export struct deleter { void operator()(font *); };
-  export using font_ptr = hai::value_holder<font *, deleter>;
-  // Note: stbtt does not take the size of the buffer as input. That sounds unsafe.
-  export font_ptr load(const char * data);
-}
-
-#pragma leco add_impl font
 #pragma leco add_impl load
 #pragma leco add_impl write
